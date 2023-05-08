@@ -3,10 +3,10 @@ from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from django.views import View
 from . models import Product,Customer,Cart
-from django.db.models import Count,Q
+from django.db.models import Count
 from django.contrib import messages
 from . forms import CustomerRegistrationForm,CustomerProfileForm
-
+from django.db.models import Q
 # Create your views here.
 
 def home(request):
@@ -110,7 +110,7 @@ def show_cart(request):
     return render(request, 'add_to_cart.html',locals())
 
 def plus_cart(request):
-    if request.method=='GET':
+    if request.method== 'GET':
         prod_id=request.GET['prod_id']
         c = Cart.objects.get(Q(product=prod_id)& Q(user=request.user))
         c.quantity+=1

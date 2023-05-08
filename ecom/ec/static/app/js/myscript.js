@@ -28,7 +28,7 @@ $('.plus-cart').click(function(){
     console.log("pid=",id)
     $.ajax({
         type:"GET",
-        url:"/pluscart",
+        url:"/plus-cart",
         data:{
             prod_id:id
         },
