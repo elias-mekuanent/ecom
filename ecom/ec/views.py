@@ -108,12 +108,16 @@ def show_cart(request):
         amount = amount + value
     totalamount = amount + 40
     return render(request, 'add_to_cart.html',locals())
-
+class checkout(View):
+    def get(self,request):
+        user=request.user
+        add=Customer.objects.filter(user=user)
+        return render(request,'checkout.html',locals())
 def plus_cart(request):
     if request.method== 'GET':
         prod_id=request.GET['prod_id']
         c = Cart.objects.get(Q(product=prod_id)& Q(user=request.user))
-        c.quantity+=1
+        c.quantity= c.quantity+ 1
         c.save()
         user = request.user
         cart   = Cart.objects.filter(user=user)
@@ -129,4 +133,43 @@ def plus_cart(request):
         }
         #print(prod_id)
         return JsonResponse(data)
-    
+def minus_cart(request):
+    if request.method== 'GET':
+        prod_id=request.GET['prod_id']
+        c = Cart.objects.get(Q(product=prod_id)& Q(user=request.user))
+        c.quantity= c.quantity - 1
+        c.save()
+        user = request.user
+        cart   = Cart.objects.filter(user=user)
+        amount = 0
+        for p in cart:
+            value = p.quantity*p.product.discounted_price
+            amount = amount + value
+        totalamount = amount + 40 
+        data={
+            'quantity':c.quantity,
+            'amount':amount,
+            'totalamount':totalamount
+        }
+        #print(prod_id)
+        return JsonResponse(data) 
+def remove_cart(request):
+    if request.method== 'GET':
+        prod_id=request.GET['prod_id']
+        c = Cart.objects.get(Q(product=prod_id)& Q(user=request.user))
+        c.quantity= c.quantity - 1
+        c.delete()
+        user = request.user
+        cart   = Cart.objects.filter(user=user)
+        amount = 0
+        for p in cart:
+            value = p.quantity*p.product.discounted_price
+            amount = amount + value
+        totalamount = amount + 40 
+        data={
+            'quantity':c.quantity,
+            'amount':amount,
+            'totalamount':totalamount
+        }
+        #print(prod_id)
+        return JsonResponse(data)  
