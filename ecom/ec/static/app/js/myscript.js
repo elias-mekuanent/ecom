@@ -46,7 +46,7 @@ $('.minus-cart').click(function(){
     var eml=this.parentNode.children[2] 
     $.ajax({
         type:"GET",
-        url:"/minuscart",
+        url:"/minus-cart",
         data:{
             prod_id:id
         },
